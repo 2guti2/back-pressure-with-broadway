@@ -23,3 +23,5 @@ erl_crash.dump
 mqtt_to_amqp-*.tar
 
 .idea/
+
+/log/

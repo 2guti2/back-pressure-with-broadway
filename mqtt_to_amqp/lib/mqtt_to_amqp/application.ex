@@ -7,11 +7,7 @@ defmodule MqttToAmqp.Application do
 
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: TelemetryRouter.Worker.start_link(arg)
-      %{
-        id: MqttToAmqp.Worker,
-        start: {MqttToAmqp.Worker, :start_link, _args}
-      },
+      {MqttToAmqp.TelemetrySender, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
