@@ -1,6 +1,7 @@
 defmodule MqttToAmqp.TelemetrySender do
   use GenServer
 
+  @host Application.compile_env(:mqtt_to_amqp, :amqp_host)
   @exchange    "telemetry_exchange"
   @queue       "telemetry"
   @queue_error "#{@queue}_error"
@@ -25,7 +26,7 @@ defmodule MqttToAmqp.TelemetrySender do
 
   @impl true
   def init(_opts) do
-    {:ok, connection} = AMQP.Connection.open()
+    {:ok, connection} = AMQP.Connection.open("amqp://guest:guest@#{@host}")
     {:ok, channel} = AMQP.Channel.open(connection)
 
     state = %{connection: connection, channel: channel}

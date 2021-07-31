@@ -5,7 +5,7 @@ defmodule AmqpToHttp.Application do
 
  use Application
 
- def start(_type, args) do
+ def start(_type, _args) do
    children = [
      {AmqpToHttp.Consumer, []}
    ]

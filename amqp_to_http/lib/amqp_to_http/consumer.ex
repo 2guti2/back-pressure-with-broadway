@@ -1,6 +1,7 @@
 defmodule AmqpToHttp.Consumer do
   use GenServer
   use AMQP
+  @host Application.compile_env(:amqp_to_http, :amqp_host)
 
   def start_link do
     GenServer.start_link(__MODULE__, [], [])
@@ -15,7 +16,7 @@ defmodule AmqpToHttp.Consumer do
   @queue_error "#{@queue}_error"
 
   def init(_opts) do
-    {:ok, conn} = Connection.open()
+    {:ok, conn} = Connection.open("amqp://guest:guest@#{@host}")
     {:ok, chan} = Channel.open(conn)
     setup_queue(chan)
 
@@ -27,17 +28,17 @@ defmodule AmqpToHttp.Consumer do
   end
 
   # Confirmation sent by the broker after registering this process as a consumer
-  def handle_info({:basic_consume_ok, %{consumer_tag: consumer_tag}}, chan) do
+  def handle_info({:basic_consume_ok, %{consumer_tag: _consumer_tag}}, chan) do
     {:noreply, chan}
   end
 
   # Sent by the broker when the consumer is unexpectedly cancelled (such as after a queue deletion)
-  def handle_info({:basic_cancel, %{consumer_tag: consumer_tag}}, chan) do
+  def handle_info({:basic_cancel, %{consumer_tag: _consumer_tag}}, chan) do
     {:stop, :normal, chan}
   end
 
   # Confirmation sent by the broker to the consumer process after a Basic.cancel
-  def handle_info({:basic_cancel_ok, %{consumer_tag: consumer_tag}}, chan) do
+  def handle_info({:basic_cancel_ok, %{consumer_tag: _consumer_tag}}, chan) do
     {:noreply, chan}
   end
 
@@ -63,8 +64,10 @@ defmodule AmqpToHttp.Consumer do
 
   defp consume(channel, tag, redelivered, payload) do
     IO.puts "Consumed '#{payload}'."
+    :ok = Basic.ack channel, tag
   rescue
     exception ->
+      IO.inspect(exception)
       :ok = Basic.reject channel, tag, requeue: not redelivered
       IO.puts "Error getting payload"
   end
