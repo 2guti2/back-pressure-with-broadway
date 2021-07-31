@@ -13,9 +13,25 @@ services:
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
-    networks:
-      - rabbitmq_go_net
 
-networks:
-  rabbitmq_go_net:
-    driver: bridge
+  # docker exec -it producer /bin/sh
+  # MqttToAmqp.TelemetrySender.send(12345, "{\"key\": \"value\"}")
+  mqtt_to_amqp:
+    build: ./mqtt_to_amqp
+    container_name: 'producer'
+    volumes:
+      - ./mqtt_to_amqp:/home/app
+    environment:
+      - AMQP_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+
+  amqp_to_http:
+    build: ./amqp_to_http
+    container_name: 'consumer'
+    volumes:
+      - ./amqp_to_http:/home/app
+    environment:
+      - AMQP_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
