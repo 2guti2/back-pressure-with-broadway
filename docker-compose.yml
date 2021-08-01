@@ -1,4 +1,4 @@
-version: "3.2"
+version: '3.2'
 services:
 
   # doc: https://www.rabbitmq.com/management-cli.html
@@ -17,7 +17,9 @@ services:
 
   # https://github.com/hivemq/mqtt-cli
   # mqtt sub -t topic
-  # mqtt pub -t topic -m "Hello"
+  # mqtt pub -t topic -m 'Hello'
+  # mosquitto_sub -q 2 -t \$share/group/topicname
+  # mosquitto_pub -t topicname -m "This is a test message"
   mosquitto:
     image: eclipse-mosquitto
     container_name: 'mosquitto'
