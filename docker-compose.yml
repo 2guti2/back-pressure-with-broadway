@@ -15,6 +15,7 @@ services:
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
 
   # docker exec -it producer /bin/sh
+  # iex -S mix
   # MqttToAmqp.TelemetrySender.send(12345, "{\"key\": \"value\"}")
   mqtt_to_amqp:
     build: ./mqtt_to_amqp

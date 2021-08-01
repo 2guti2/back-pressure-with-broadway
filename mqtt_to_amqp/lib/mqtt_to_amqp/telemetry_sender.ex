@@ -14,7 +14,6 @@ defmodule MqttToAmqp.TelemetrySender do
   # Client
 
   def start_link(default) when is_list(default) do
-    IO.inspect("start_link")
     GenServer.start_link(__MODULE__, default, name: __MODULE__)
   end
 
