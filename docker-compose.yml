@@ -1,0 +1,52 @@
+version: "3.2"
+services:
+
+  # doc: https://www.rabbitmq.com/management-cli.html
+  # url: http://localhost:15672
+  # username: guest
+  # password: guest
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
+  # https://github.com/hivemq/mqtt-cli
+  # mqtt sub -t topic
+  # mqtt pub -t topic -m "Hello"
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: 'mosquitto'
+    ports:
+      - 1883:1883
+      - 8883:8883
+    volumes:
+      - $PWD/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    restart: unless-stopped
+
+  # docker exec -it producer /bin/sh
+  # iex -S mix
+  # MqttToAmqp.TelemetrySender.send(12345, "{\"key\": \"value\"}")
+  mqtt_to_amqp:
+    build: ./mqtt_to_amqp
+    container_name: 'producer'
+    volumes:
+      - ./mqtt_to_amqp:/home/app
+    environment:
+      - AMQP_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+
+  amqp_to_http:
+    build: ./amqp_to_http
+    container_name: 'consumer'
+    volumes:
+      - ./amqp_to_http:/home/app
+    environment:
+      - AMQP_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
