@@ -37,9 +37,9 @@ defmodule HttpToHtmlWeb.PageLive do
     update_subscriber_aux([], subscribers, subscriber)
   end
 
-  def update_subscriber_aux([], [], subscriber), do: [subscriber]
-  def update_subscriber_aux(acc, [], subscriber), do: acc
-  def update_subscriber_aux(acc, [h], subscriber) do
+  defp update_subscriber_aux([], [], subscriber), do: [subscriber]
+  defp update_subscriber_aux(acc, [], subscriber), do: acc
+  defp update_subscriber_aux(acc, [h], subscriber) do
     if h.id == subscriber.id do
       updated_sub = h |> Map.put(:data, h.data ++ subscriber.data)
       update_subscriber_aux(acc ++ [updated_sub], [], subscriber)
@@ -47,7 +47,7 @@ defmodule HttpToHtmlWeb.PageLive do
       update_subscriber_aux(acc ++ [h, subscriber], [], subscriber)
     end
   end
-  def update_subscriber_aux(acc, [h | t], subscriber) do
+  defp update_subscriber_aux(acc, [h | t], subscriber) do
     if h.id == subscriber.id do
       updated_sub = h |> Map.put(:data, h.data ++ subscriber.data)
       update_subscriber_aux(acc ++ [updated_sub], t, subscriber)
