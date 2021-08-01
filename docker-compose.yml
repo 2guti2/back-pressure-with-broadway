@@ -1,5 +1,6 @@
 version: "3.2"
 services:
+  
   # doc: https://www.rabbitmq.com/management-cli.html
   # url: http://localhost:15672
   # username: guest
