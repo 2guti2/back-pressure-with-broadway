@@ -38,6 +38,7 @@ services:
       - ./mqtt_to_amqp:/home/app
     environment:
       - AMQP_HOST=rabbitmq
+      - MQTT_HOST=mosquitto
     depends_on:
       - rabbitmq
 

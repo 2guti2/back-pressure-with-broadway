@@ -1,7 +1,7 @@
 defmodule MqttToAmqp.TelemetrySender do
   use GenServer
 
-  @host Application.compile_env(:mqtt_to_amqp, :amqp_host)
+  @host Application.get_env(:mqtt_to_amqp, :amqp_host)
   @exchange    "telemetry_exchange"
   @queue       "telemetry"
   @queue_error "#{@queue}_error"

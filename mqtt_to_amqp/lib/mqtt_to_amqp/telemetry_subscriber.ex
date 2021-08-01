@@ -1,7 +1,7 @@
 defmodule MqttToAmqp.TelemetrySubscriber do
   use Supervisor
 
-  @broker_host Application.compile_env(:mqtt_to_amqp, :mqtt_host)
+  @broker_host Application.get_env(:mqtt_to_amqp, :mqtt_host)
   @broker_port 1883
 
   def start_link(opts) do
@@ -13,7 +13,7 @@ defmodule MqttToAmqp.TelemetrySubscriber do
     children = [
       {Tortoise.Connection,
         [
-          client_id: MqttToAmqp,
+          client_id: UUID.uuid1(),
           server: {Tortoise.Transport.Tcp, host: @broker_host, port: @broker_port},
           handler: {MqttToAmqp.TelemetryHandler, []},
           subscriptions: ["device/+/telemetry"]

@@ -16,6 +16,7 @@ defmodule MqttToAmqp.TelemetryHandler do
 
   #  topic filter room/+/temp
   def handle_message(["device", client_id, "telemetry"], payload, state) do
+    IO.inspect("New message received from client #{client_id}")
     TelemetrySender.send(client_id, payload)
 
     {:ok, state}

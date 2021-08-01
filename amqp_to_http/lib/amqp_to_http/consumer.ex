@@ -1,7 +1,7 @@
 defmodule AmqpToHttp.Consumer do
   use GenServer
   use AMQP
-  @host Application.compile_env(:amqp_to_http, :amqp_host)
+  @host Application.get_env(:amqp_to_http, :amqp_host)
 
   def start_link do
     GenServer.start_link(__MODULE__, [], [])
