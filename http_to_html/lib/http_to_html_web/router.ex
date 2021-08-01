@@ -14,6 +14,13 @@ defmodule HttpToHtmlWeb.Router do
     plug :accepts, ["json"]
   end
 
+  # Other scopes may use custom stacks.
+  scope "/api/v1", HttpToHtmlWeb.Api.V1, as: :api_v1 do
+    pipe_through :api
+
+    post "/telemetry", TelemetryController, :create
+  end
+
   scope "/", HttpToHtmlWeb do
     pipe_through :browser
 

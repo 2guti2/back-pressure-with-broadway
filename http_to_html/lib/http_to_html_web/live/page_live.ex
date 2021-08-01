@@ -3,33 +3,56 @@ defmodule HttpToHtmlWeb.PageLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+    if connected?(socket), do: Phoenix.PubSub.subscribe(HttpToHtml.PubSub, "telemetry:lobby")
+    {:ok,
+      socket
+      |> assign(:subscribers, [])
+    }
   end
 
   @impl true
-  def handle_event("suggest", %{"q" => query}, socket) do
-    {:noreply, assign(socket, results: search(query), query: query)}
+  def handle_info(%{:event => "new_reading", :payload => payload}, socket) do
+    %{"payload" => payload, "subscriber" => subscriber_id} = payload
+
+    subscriber = %{
+      id: subscriber_id,
+      data: [payload]
+    }
+
+    subscribers = update_subscriber(socket.assigns.subscribers, subscriber)
+
+    {
+      :noreply,
+      socket
+      |> assign(:subscribers, subscribers)
+      |> put_flash(:info, "NEW TELEMETRY READING")
+    }
   end
 
   @impl true
-  def handle_event("search", %{"q" => query}, socket) do
-    case search(query) do
-      %{^query => vsn} ->
-        {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
+  def handle_info(_, socket), do: {:noreply, socket}
 
-      _ ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "No dependencies found matching \"#{query}\"")
-         |> assign(results: %{}, query: query)}
+  defp update_subscriber([], subscriber), do: [subscriber]
+  defp update_subscriber(subscribers, subscriber) do
+    update_subscriber_aux([], subscribers, subscriber)
+  end
+
+  def update_subscriber_aux([], [], subscriber), do: [subscriber]
+  def update_subscriber_aux(acc, [], subscriber), do: acc
+  def update_subscriber_aux(acc, [h], subscriber) do
+    if h.id == subscriber.id do
+      updated_sub = h |> Map.put(:data, h.data ++ subscriber.data)
+      update_subscriber_aux(acc ++ [updated_sub], [], subscriber)
+    else
+      update_subscriber_aux(acc ++ [h, subscriber], [], subscriber)
     end
   end
-
-  defp search(query) do
-    for {app, desc, vsn} <- Application.started_applications(),
-        app = to_string(app),
-        String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
-        into: %{},
-        do: {app, vsn}
+  def update_subscriber_aux(acc, [h | t], subscriber) do
+    if h.id == subscriber.id do
+      updated_sub = h |> Map.put(:data, h.data ++ subscriber.data)
+      update_subscriber_aux(acc ++ [updated_sub], t, subscriber)
+    else
+      update_subscriber_aux(acc ++ [h], t, subscriber)
+    end
   end
 end

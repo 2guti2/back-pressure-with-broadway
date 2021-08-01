@@ -3,6 +3,7 @@ defmodule HttpToHtmlWeb.UserSocket do
 
   ## Channels
   # channel "room:*", HttpToHtmlWeb.RoomChannel
+  channel "telemetry:lobby", HttpToHtmlWeb.TelemetryChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
