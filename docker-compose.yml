@@ -18,8 +18,8 @@ services:
   # https://github.com/hivemq/mqtt-cli
   # mqtt sub -t topic
   # mqtt pub -t topic -m 'Hello'
-  # mosquitto_sub -q 2 -t \$share/group/topicname
-  # mosquitto_pub -t topicname -m "This is a test message"
+  # mosquitto_sub -q 2 -t \$share/cluster/device/+/telemetry
+  # mosquitto_pub -t device/1234/telemetry -m "{\"key\": \"value\"}"
   mosquitto:
     image: eclipse-mosquitto
     container_name: 'mosquitto'

@@ -16,7 +16,7 @@ defmodule MqttToAmqp.TelemetrySubscriber do
           client_id: UUID.uuid1(),
           server: {Tortoise.Transport.Tcp, host: @broker_host, port: @broker_port},
           handler: {MqttToAmqp.TelemetryHandler, []},
-          subscriptions: ["device/+/telemetry"]
+          subscriptions: ["\$share/cluster/device/+/telemetry"]
         ]}
     ]
 
