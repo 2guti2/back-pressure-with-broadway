@@ -1,4 +1,5 @@
 version: '3.2'
+# docker-compose --compatibility up
 services:
 
   # doc: https://www.rabbitmq.com/management-cli.html
@@ -35,7 +36,7 @@ services:
   # MqttToAmqp.TelemetrySender.send(12345, "{\"key\": \"value\"}")
   mqtt_to_amqp:
     build: ./mqtt_to_amqp
-    container_name: 'producer'
+    # container_name: 'producer'
     volumes:
       - ./mqtt_to_amqp:/home/app
     environment:
@@ -43,6 +44,9 @@ services:
       - MQTT_HOST=mosquitto
     depends_on:
       - rabbitmq
+    deploy:
+      mode: replicated
+      replicas: 2
 
   amqp_to_http:
     build: ./amqp_to_http

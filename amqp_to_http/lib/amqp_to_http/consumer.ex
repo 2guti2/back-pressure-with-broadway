@@ -11,7 +11,6 @@ defmodule AmqpToHttp.Consumer do
     GenServer.start_link(__MODULE__, [], [])
   end
 
-  @exchange    "telemetry_exchange"
   @queue       "telemetry"
   @queue_error "#{@queue}_error"
 
@@ -58,8 +57,6 @@ defmodule AmqpToHttp.Consumer do
         {"x-dead-letter-routing-key", :longstr, @queue_error}
       ]
     )
-    :ok = Exchange.fanout(chan, @exchange, durable: true)
-    :ok = Queue.bind(chan, @queue, @exchange)
   end
 
   defp consume(channel, tag, redelivered, payload) do

@@ -7,7 +7,8 @@ defmodule AmqpToHttp.Application do
 
  def start(_type, _args) do
    children = [
-     {AmqpToHttp.Consumer, []}
+     # {AmqpToHttp.Consumer, []}
+     {MyBroadway, []}
    ]
 
    # See https://hexdocs.pm/elixir/Supervisor.html

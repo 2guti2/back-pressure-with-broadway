@@ -2,7 +2,6 @@ defmodule MqttToAmqp.TelemetrySender do
   use GenServer
 
   @host Application.get_env(:mqtt_to_amqp, :amqp_host)
-  @exchange    "telemetry_exchange"
   @queue       "telemetry"
   @queue_error "#{@queue}_error"
 
@@ -43,7 +42,6 @@ defmodule MqttToAmqp.TelemetrySender do
         {"x-dead-letter-routing-key", :longstr, @queue_error}
       ]
     )
-    :ok = AMQP.Queue.bind(channel, @queue, @exchange)
 
     {:noreply, state}
   end
