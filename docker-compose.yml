@@ -57,3 +57,11 @@ services:
       - AMQP_HOST=rabbitmq
     depends_on:
       - rabbitmq
+
+  http_to_html:
+    build: ./http_to_html
+    container_name: 'viewer'
+    ports:
+      - 4000:4000
+    volumes:
+      - ./http_to_html:/home/app
