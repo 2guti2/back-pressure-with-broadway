@@ -31,6 +31,12 @@ services:
       - $PWD/mosquitto.conf:/mosquitto/config/mosquitto.conf
     restart: unless-stopped
 
+  ## TODO
+  ## - use logger
+  ## - try to split broadway in different nodes (one by sub)
+  ##    - for this we will need the api to keep subscriptions
+  ## - script to create a bunch of messages
+
   # docker exec -it producer /bin/sh
   # iex -S mix
   # MqttToAmqp.TelemetrySender.send(12345, "{\"key\": \"value\"}")
