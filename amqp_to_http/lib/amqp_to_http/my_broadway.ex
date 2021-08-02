@@ -31,7 +31,7 @@ defmodule MyBroadway do
       ],
       batchers: [
         default: [
-          batch_size: 2,
+          batch_size: 10,
           batch_timeout: 15000,
           concurrency: 4
         ]
