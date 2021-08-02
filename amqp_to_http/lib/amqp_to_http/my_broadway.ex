@@ -94,7 +94,7 @@ defmodule MyBroadway do
 
   defp send_readings_to_subscription(readings, endpoint) do
     for reading <- readings do
-      json = Jason.encode!(%{ telemetry: reading }) |> IO.inspect()
+      json = Jason.encode!(%{ telemetry: reading })
       HTTPoison.post(endpoint, json, [
         {"Content-Type", "application/json"}
       ])
