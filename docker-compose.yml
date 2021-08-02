@@ -34,8 +34,9 @@ services:
   ## TODO
   ## - use logger
   ## - try to split broadway in different nodes (one by sub)
-  ##    - for this we will need the api to keep subscriptions
+  ##    - for this we will need the api to keep subscriptions... broadway asks api for each message?
   ## - script to create a bunch of messages
+  ## - make visualizer view only last 10 messages or so
 
   # docker exec -it producer /bin/sh
   # iex -S mix

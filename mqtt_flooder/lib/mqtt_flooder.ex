@@ -1,8 +1,8 @@
 defmodule MqttFlooder do
   @moduledoc false
 
-  @clients 100
-  @msg_per_client 1000
+  @clients 5
+  @msg_per_client 100
 
   def flood do
     {:ok, pid} = Agent.start_link(fn -> 0 end)
@@ -17,7 +17,9 @@ defmodule MqttFlooder do
           server: {Tortoise.Transport.Tcp, host: 'localhost', port: 1883}
         )
         for j <- 1..@msg_per_client do
-          Tortoise.publish(client_id, "test", "Hello for the #{count.()} time from the World of Tomorrow !", qos: 0)
+          count = count.()
+          IO.inspect("Message published #{count}")
+          Tortoise.publish(client_id, "device/#{count}/telemetry", "{\"msgnum\": \"#{count}\"}", qos: 0)
         end
       end)
     end

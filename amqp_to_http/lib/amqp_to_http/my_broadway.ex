@@ -31,7 +31,7 @@ defmodule MyBroadway do
       ],
       batchers: [
         default: [
-          batch_size: 10,
+          batch_size: 1000,
           batch_timeout: 15000,
           concurrency: 4
         ]
@@ -87,9 +87,20 @@ defmodule MyBroadway do
   end
 
   defp get_id(id) do
-    first_char = String.at(id, 0)
-    {int, _} = Integer.parse(first_char)
-    int
+    {int, _} = Integer.parse(id)
+    if int <= 100 do
+      100
+    else
+      if int <= 200 do
+        200
+      else
+        if int <= 300 do
+          300
+        else
+          400
+        end
+      end
+    end
   end
 
   defp send_readings_to_subscription(readings, endpoint) do
