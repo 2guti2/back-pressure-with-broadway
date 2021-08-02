@@ -6,6 +6,8 @@ RUN mix local.hex --force && mix local.rebar --force
 
 COPY . .
 
+RUN mix deps.update --all
+
 RUN mix deps.get
 
 CMD mix run --no-halt

@@ -48,6 +48,7 @@ services:
       mode: replicated
       replicas: 2
 
+  # probably should create topic if it doesn't exist
   amqp_to_http:
     build: ./amqp_to_http
     container_name: 'consumer'
@@ -55,6 +56,7 @@ services:
       - ./amqp_to_http:/home/app
     environment:
       - AMQP_HOST=rabbitmq
+      - HTTP_HOST=http_to_html
     depends_on:
       - rabbitmq
 

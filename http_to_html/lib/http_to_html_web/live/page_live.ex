@@ -12,11 +12,11 @@ defmodule HttpToHtmlWeb.PageLive do
 
   @impl true
   def handle_info(%{:event => "new_reading", :payload => payload}, socket) do
-    %{"payload" => payload, "subscriber" => subscriber_id} = payload
+    %{"payload" => readings, "subscriber" => subscriber_id} = payload
 
     subscriber = %{
       id: subscriber_id,
-      data: [payload]
+      data: readings
     }
 
     subscribers = update_subscriber(socket.assigns.subscribers, subscriber)

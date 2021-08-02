@@ -22,7 +22,7 @@ defmodule AmqpToHttp.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-#      {:amqp, "~> 2.1"},
+      {:httpoison, "~> 1.8"},
       {:jason, "~> 1.2"},
       {:broadway_rabbitmq, "~> 0.6.0"}
       # {:dep_from_hexpm, "~> 0.3.0"},
