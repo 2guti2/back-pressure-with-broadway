@@ -6,7 +6,10 @@
 <div class="row">
   <%= for subscriber <- @subscribers do %>
    <div class="col col-md-4">
-     <h3>Subscriber <%= subscriber.id %></h3>
+     <div style="display: flex; padding: 5px;">
+       <div style="width: 50%"><h4><u>Subscriber <%= subscriber.id %></u></h4></div>
+       <div style="width: 50%; text-align: right;"><h4>Message count: <%= length(subscriber.data) %></h4></div>
+     </div>
      <ul>
        <%= for data <- Enum.take(subscriber.data, 11) do %>
         <li>
