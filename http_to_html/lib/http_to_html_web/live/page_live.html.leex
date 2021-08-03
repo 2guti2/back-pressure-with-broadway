@@ -8,7 +8,7 @@
    <div class="col col-md-4">
      <h3>Subscriber <%= subscriber.id %></h3>
      <ul>
-       <%= for data <- subscriber.data do %>
+       <%= for data <- Enum.take(subscriber.data, 11) do %>
         <li>
           <pre><%= inspect data %></pre>
         </li>

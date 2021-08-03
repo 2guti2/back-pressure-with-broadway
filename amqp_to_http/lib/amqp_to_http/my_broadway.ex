@@ -22,18 +22,18 @@ defmodule MyBroadway do
           qos: [
             prefetch_count: 150
           ]},
-        concurrency: 4
+        concurrency: 2
       ],
       processors: [
         default: [
-          concurrency: 4
+          concurrency: 2
         ]
       ],
       batchers: [
         default: [
-          batch_size: 1000,
+          batch_size: 10,
           batch_timeout: 15000,
-          concurrency: 4
+          concurrency: 1
         ]
       ]
     )
@@ -63,44 +63,48 @@ defmodule MyBroadway do
 
   def merge_payload_by_subscriber(messages) do
     Enum.reduce(messages, [], fn message, acc ->
-      update_subscriber_aux([], acc, message)
+      update_subscriber_aux([], acc, message, false)
     end)
   end
 
-  defp update_subscriber_aux([], [], subscriber), do: [subscriber]
-  defp update_subscriber_aux(acc, [], subscriber), do: acc
-  defp update_subscriber_aux(acc, [h], subscriber) do
+  defp update_subscriber_aux([], [], subscriber, _), do: [subscriber]
+  defp update_subscriber_aux(acc, [], subscriber, false), do: acc ++ [subscriber]
+  defp update_subscriber_aux(acc, [], _subscriber, true), do: acc
+  defp update_subscriber_aux(acc, lst, _subscriber, true), do: acc ++ lst
+  defp update_subscriber_aux(acc, [h], subscriber, false) do
     if h.subscriber == subscriber.subscriber do
       updated_sub = h |> Map.put(:payload, h.payload ++ subscriber.payload)
-      update_subscriber_aux(acc ++ [updated_sub], [], subscriber)
+      update_subscriber_aux(acc ++ [updated_sub], [], subscriber, true)
     else
-      update_subscriber_aux(acc ++ [h, subscriber], [], subscriber)
+      update_subscriber_aux(acc ++ [h], [], subscriber, false)
     end
   end
-  defp update_subscriber_aux(acc, [h | t], subscriber) do
+  defp update_subscriber_aux(acc, [h | t], subscriber, false) do
     if h.subscriber == subscriber.subscriber do
       updated_sub = h |> Map.put(:payload, h.payload ++ subscriber.payload)
-      update_subscriber_aux(acc ++ [updated_sub], t, subscriber)
+      update_subscriber_aux(acc ++ [updated_sub], t, subscriber, true)
     else
-      update_subscriber_aux(acc ++ [h], t, subscriber)
+      update_subscriber_aux(acc ++ [h], t, subscriber, false)
     end
   end
 
+#  defp get_id(id) do
+#    {int, _} = Integer.parse(id)
+#
+#    case int do
+#      x when x <= 10 -> 10
+#      x when x <= 20 -> 20
+#      x when x <= 30 -> 30
+#      x when x <= 40 -> 40
+#      x when x <= 50 -> 50
+#      _ -> 100
+#    end
+#  end
+
   defp get_id(id) do
-    {int, _} = Integer.parse(id)
-    if int <= 100 do
-      100
-    else
-      if int <= 200 do
-        200
-      else
-        if int <= 300 do
-          300
-        else
-          400
-        end
-      end
-    end
+    first_char = String.at(id, 0)
+    {int, _} = Integer.parse(first_char)
+    int
   end
 
   defp send_readings_to_subscription(readings, endpoint) do
