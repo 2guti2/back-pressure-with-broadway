@@ -7,13 +7,13 @@ defmodule AmqpToHttp.Application do
 
  def start(_type, _args) do
    children = [
-     # {AmqpToHttp.Consumer, []}
+     {AmqpToHttp.Consumer, []},
      {MyBroadway, []}
    ]
 
    # See https://hexdocs.pm/elixir/Supervisor.html
    # for other strategies and supported options
-   opts = [strategy: :one_for_one, name: AmqpToHttp.Supervisor]
+   opts = [strategy: :one_for_all, name: AmqpToHttp.Supervisor]
    Supervisor.start_link(children, opts)
  end
 end

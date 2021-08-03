@@ -11,7 +11,7 @@ defmodule AmqpToHttp.Consumer do
     GenServer.start_link(__MODULE__, [], [])
   end
 
-  @queue       "telemetry"
+  @queue       "test"
   @queue_error "#{@queue}_error"
 
   def init(_opts) do

@@ -1,5 +1,5 @@
 version: '3.2'
-# docker-compose --compatibility up
+# docker-compose up
 services:
 
   # doc: https://www.rabbitmq.com/management-cli.html
@@ -15,6 +15,11 @@ services:
     volumes:
       - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
       - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   # https://github.com/hivemq/mqtt-cli
   # mqtt sub -t topic
@@ -35,6 +40,11 @@ services:
   ## - use logger
   ## - try to split broadway in different nodes (one by sub)
   ##    - for this we will need the api to keep subscriptions... broadway asks api for each message?diag
+  ## https://elixirschool.com/en/lessons/advanced/otp-distribution/
+  ## https://elixir-lang.org/getting-started/mix-otp/distributed-tasks.html
+  ## https://elixir-lang.org/getting-started/mix-otp/dynamic-supervisor.html
+  ## - use batch id to split by subscriber
+  ## - use partitions https://hexdocs.pm/broadway/Broadway.html
 
   # docker exec -it producer /bin/sh
   # iex -S mix
@@ -49,6 +59,7 @@ services:
       - MQTT_HOST=mosquitto
     depends_on:
       - rabbitmq
+    restart: on-failure
     deploy:
       mode: replicated
       replicas: 2
@@ -62,6 +73,7 @@ services:
     environment:
       - AMQP_HOST=rabbitmq
       - HTTP_HOST=http_to_html
+    restart: on-failure
     depends_on:
       - rabbitmq
 

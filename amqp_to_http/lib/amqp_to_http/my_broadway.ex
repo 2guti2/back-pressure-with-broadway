@@ -87,7 +87,7 @@ defmodule MyBroadway do
       update_subscriber_aux(acc ++ [h], t, subscriber, false)
     end
   end
-  
+
   defp get_id(id) do
     first_char = String.at(id, 0)
     {int, _} = Integer.parse(first_char)
