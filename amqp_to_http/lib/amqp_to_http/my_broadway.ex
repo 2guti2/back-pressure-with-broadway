@@ -87,20 +87,7 @@ defmodule MyBroadway do
       update_subscriber_aux(acc ++ [h], t, subscriber, false)
     end
   end
-
-#  defp get_id(id) do
-#    {int, _} = Integer.parse(id)
-#
-#    case int do
-#      x when x <= 10 -> 10
-#      x when x <= 20 -> 20
-#      x when x <= 30 -> 30
-#      x when x <= 40 -> 40
-#      x when x <= 50 -> 50
-#      _ -> 100
-#    end
-#  end
-
+  
   defp get_id(id) do
     first_char = String.at(id, 0)
     {int, _} = Integer.parse(first_char)
