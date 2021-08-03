@@ -1,6 +1,10 @@
 <div class="row">
   <div class="col col-md-12">
     <h1>Subscribers</h1>
+    <%= if @started_at && @updated_at do %>
+      <h3>Time between first and last message: <%= DateTime.diff(@updated_at, @started_at) %> seconds.</h3>
+    <% end %>
+    <h3>Total # messages: <%= @number_of_messages %></h3>
   </div>
 </div>
 <div class="row">

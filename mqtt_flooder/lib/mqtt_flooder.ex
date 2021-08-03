@@ -2,7 +2,7 @@ defmodule MqttFlooder do
   @moduledoc false
 
   @clients 10
-  @msg_per_client 10
+  @msg_per_client 1000
 
   def flood do
     {:ok, pid} = Agent.start_link(fn -> 0 end)

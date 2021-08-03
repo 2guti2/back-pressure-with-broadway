@@ -28,7 +28,7 @@ services:
       - 1883:1883
       - 8883:8883
     volumes:
-      - $PWD/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     restart: unless-stopped
 
   ## TODO

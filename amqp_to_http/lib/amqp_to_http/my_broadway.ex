@@ -22,18 +22,18 @@ defmodule MyBroadway do
           qos: [
             prefetch_count: 150
           ]},
-        concurrency: 2
+        concurrency: 4
       ],
       processors: [
         default: [
-          concurrency: 2
+          concurrency: 4
         ]
       ],
       batchers: [
         default: [
-          batch_size: 10,
+          batch_size: 400,
           batch_timeout: 15000,
-          concurrency: 1
+          concurrency: 4
         ]
       ]
     )

@@ -7,12 +7,21 @@ defmodule HttpToHtmlWeb.PageLive do
     {:ok,
       socket
       |> assign(:subscribers, [])
+      |> assign(:started_at, nil)
+      |> assign(:updated_at, nil)
+      |> assign(:number_of_messages, 0)
     }
   end
 
   @impl true
   def handle_info(%{:event => "new_reading", :payload => payload}, socket) do
     %{"payload" => readings, "subscriber" => subscriber_id} = payload
+
+    started_at = if !socket.assigns.started_at do
+      DateTime.utc_now()
+    else
+      socket.assigns.started_at
+    end
 
     subscriber = %{
       id: subscriber_id,
@@ -21,10 +30,17 @@ defmodule HttpToHtmlWeb.PageLive do
 
     subscribers = update_subscriber(socket.assigns.subscribers, subscriber)
 
+    number_of_messages = subscribers |> Enum.reduce(0, fn sub, acc ->
+      acc + length(sub.data)
+    end)
+
     {
       :noreply,
       socket
       |> assign(:subscribers, subscribers)
+      |> assign(:started_at, started_at)
+      |> assign(:updated_at, DateTime.utc_now())
+      |> assign(:number_of_messages, number_of_messages)
       |> put_flash(:info, "NEW TELEMETRY READING")
     }
   end
