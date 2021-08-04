@@ -1,5 +1,11 @@
 version: '3.2'
-# docker-compose up
+## TODO
+## - try to split broadway in different nodes (one by sub)
+##    - for this we will need the api to keep subscriptions...
+##      broadway asks api for each message? no. it should import on startup and expose an update api
+## https://elixirschool.com/en/lessons/advanced/otp-distribution/
+## https://elixir-lang.org/getting-started/mix-otp/distributed-tasks.html
+## https://elixir-lang.org/getting-started/mix-otp/dynamic-supervisor.html
 services:
 
   # doc: https://www.rabbitmq.com/management-cli.html
@@ -36,16 +42,6 @@ services:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     restart: unless-stopped
 
-  ## TODO
-  ## - use logger
-  ## - try to split broadway in different nodes (one by sub)
-  ##    - for this we will need the api to keep subscriptions... broadway asks api for each message?diag
-  ## https://elixirschool.com/en/lessons/advanced/otp-distribution/
-  ## https://elixir-lang.org/getting-started/mix-otp/distributed-tasks.html
-  ## https://elixir-lang.org/getting-started/mix-otp/dynamic-supervisor.html
-  ## - use batch id to split by subscriber
-  ## - use partitions https://hexdocs.pm/broadway/Broadway.html
-
   # docker exec -it producer /bin/sh
   # iex -S mix
   # MqttToAmqp.TelemetrySender.send(12345, "{\"key\": \"value\"}")
@@ -64,7 +60,6 @@ services:
       mode: replicated
       replicas: 2
 
-  # probably should create topic if it doesn't exist
   amqp_to_http:
     build: ./amqp_to_http
     container_name: 'consumer'
