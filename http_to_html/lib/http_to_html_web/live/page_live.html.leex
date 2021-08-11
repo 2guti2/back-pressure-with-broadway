@@ -14,13 +14,15 @@
        <div style="width: 50%"><h4><u>Subscriber <%= subscriber.id %></u></h4></div>
        <div style="width: 50%; text-align: right;"><h4>Message count: <%= length(subscriber.data) %></h4></div>
      </div>
-     <ul>
-       <%= for data <- Enum.take(subscriber.data, 11) do %>
-        <li>
-          <pre><%= inspect data %></pre>
-        </li>
-       <% end %>
-     </ul>
+     <div style="height: 100px; overflow-y: scroll;">
+       <ul>
+         <%= for data <- subscriber.data do %>
+         <li>
+           <pre><%= inspect data %></pre>
+         </li>
+         <% end %>
+       </ul>
+     </div>
    </div>
   <% end %>
 </div>
